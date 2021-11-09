@@ -19,8 +19,18 @@ contract WavePortal {
     }
     // Decalare variable waves from new struct
     Wave[] waves;
+       /*
+     * This is an address => uint mapping, meaning I can associate an address with a number!
+     * In this case, I'll be storing the address with the last time the user waved at us.
+     */
+    mapping(address => uint256) public lastWavedAt;
     // kind of a post request
     function wave(string memory _message) public{
+         require(
+            lastWavedAt[msg.sender] + 15 minutes < block.timestamp,
+            "Wait 15m"
+        );
+        lastWavedAt[msg.sender] = block.timestamp;
         totalwaves+=1;
         console.log("%s has waved!", msg.sender);
         waves.push(Wave(msg.sender,_message,block.timestamp));
